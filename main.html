@@ -1,16 +1,92 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-      <link rel="stylesheet" href="styles.css">
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Shopping List</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin-top: 20px;
+        }
 
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #grandTotal {
+            margin-top: 10px;
+        }
+    </style>
+</head>
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
-</script>
+
+    <div>
+        <label for="item-name-input">Name:</label>
+        <input type="text" id="item-name-input" placeholder="Enter item name">
+        <label for="item-price-input">Price:</label>
+        <input type="number" id="item-price-input" placeholder="Enter item price">
+        <button onclick="addItem()" id="add-btn">Add</button>
+    </div>
+
+    <table id="shopping-list">
+        <thead>
+            <tr>
+                <th data-ns-test="item-name">Item Name</th>
+                <th data-ns-test="item-price">Item Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="grandTotalRow">
+                <td colspan="2" data-ns-test="grandTotal">0</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function addItem() {
+            var itemNameInput = document.getElementById('item-name-input');
+            var itemPriceInput = document.getElementById('item-price-input');
+
+            var itemName = itemNameInput.value.trim();
+            var itemPrice = parseFloat(itemPriceInput.value);
+
+            if (itemName === '' || isNaN(itemPrice) || itemPrice <= 0) {
+                alert('Please enter valid item name and price.');
+                return;
+            }
+
+            var table = document.getElementById('shopping-list').getElementsByTagName('tbody')[0];
+
+            var newRow = table.insertRow(table.rows.length - 1);
+            var nameCell = newRow.insertCell(0);
+            var priceCell = newRow.insertCell(1);
+
+            nameCell.innerHTML = itemName;
+            priceCell.innerHTML = itemPrice.toFixed(2);
+
+            updateGrandTotal();
+            
+            // Clear input fields
+            itemNameInput.value = '';
+            itemPriceInput.value = '';
+        }
+
+        function updateGrandTotal() {
+            var table = document.getElementById('shopping-list');
+            var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            var grandTotal = 0;
+
+            for (var i = 0; i < rows.length - 1; i++) {
+                grandTotal += parseFloat(rows[i].getElementsByTagName('td')[1].innerHTML);
+            }
+
+            document.getElementById('grandTotalRow').getElementsByTagName('td')[0].innerHTML = grandTotal.toFixed(2);
+        }
+    </script>
 
 </body>
-
 </html>
